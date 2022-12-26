@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuaire{% endblock %}
+
+{% block body %}
+
+<h1>Annuaire</h1>
+
+<form action="{{ path('app_home') }}" method="POST">
+    <input type="text">
+    <input type="submit">
+</form>
+
+{% endblock %}
