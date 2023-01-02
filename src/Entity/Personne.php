@@ -11,15 +11,19 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getPersonnes"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getPersonnes"])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getPersonnes"])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getPersonnes"])]
     private ?string $tel = null;
 
     public function getId(): ?int
@@ -61,5 +65,10 @@ class Personne
         $this->tel = $tel;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getPrenom() . ' ' .$this->getNom() . ' ' . $this->getTel();
     }
 }
