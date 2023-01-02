@@ -1,0 +1,7 @@
+#result ul {
+    padding: 0;
+}
+
+#result ul li {
+    list-style-type: none;
+}

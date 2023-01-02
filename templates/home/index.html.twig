@@ -7,8 +7,16 @@
 <h1>Annuaire</h1>
 
 <form action="{{ path('app_home') }}" method="POST">
-    <input type="text">
+    <input type="text" id="champ">
     <input type="submit">
 </form>
+
+<div id="result">
+    <ul>
+        {% for personne in personnes %}
+            <li>{{ personne.prenom }} {{ personne.nom }}</li>
+        {% endfor %}
+    </ul>
+</div>
 
 {% endblock %}
