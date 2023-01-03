@@ -4,21 +4,20 @@ const liste = document.querySelector("#liste");
 const champ = document.querySelector("#champ");
 const liens = document.getElementsByTagName("a");
 
-champ.addEventListener("keyup", (event) => {
-    if (champ.value) {
-        event.preventDefault();
-        recupererPersonnes();
+champ.addEventListener("keyup", () => {
+    if (champ.value.length >= 1) {
+        recupererPersonnes(champ.value);
     }
 });
 
-function recupererPersonnes() {
+function recupererPersonnes(prenom) {
     let requete = new XMLHttpRequest();
-    requete.open("GET", "http://127.0.0.1:8000/api/personnes");
+    requete.open("GET", "http://127.0.0.1:8000/api/personnes/" + prenom);
     requete.responseType = "json";
     requete.send();
 
     requete.onload = function () {
-        if ((requete.readyState = XMLHttpRequest.DONE)) {
+        if (requete.readyState === XMLHttpRequest.DONE) {
             if (requete.status === 200) {
                 let reponse = requete.response;
                 for (let i = 0; i < reponse.length; i++) {
@@ -56,7 +55,7 @@ function getPersonne(id) {
     requete.send();
 
     requete.onload = function () {
-        if ((requete.readyState = XMLHttpRequest.DONE)) {
+        if (requete.readyState === XMLHttpRequest.DONE) {
             if (requete.status === 200) {
                 console.log(requete.response);
                 let reponse = requete.response;

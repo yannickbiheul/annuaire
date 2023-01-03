@@ -35,13 +35,25 @@ class HomeController extends AbstractController
     }
 
     /**
-     * Afficher une personne
+     * Afficher une personne depuis l'id
      */
-    #[Route('/api/personnes/{id}', name: 'detailPersonne', methods: ['GET'])]
+    #[Route('/api/personnes/{id}', name: 'detailPersonneId', methods: ['GET'])]
     public function readPersonneById(Personne $personne, SerializerInterface $serializer): JsonResponse
     {
         $jsonPersonne = $serializer->serialize($personne, 'json');
 
         return new JsonResponse($personne, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * Afficher une personne depuis le prenom
+     */
+    #[Route('/api/personnes/{prenom}', name: 'detailPersonnePrenom', methods: ['GET'])]
+    public function readPersonneByPrenom($prenom, PersonneRepository $personneRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $listPersonnes = $personneRepository->findByExampleField($prenom);
+        $jsonListPersonnes = $serializer->serialize($listPersonnes, 'json');
+
+        return new JsonResponse($jsonListPersonnes, Response::HTTP_OK, [], true);
     }
 }
