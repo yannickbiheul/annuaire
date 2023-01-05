@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Personne;
 use App\Repository\PersonneRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +38,7 @@ class HomeController extends AbstractController
     /**
      * Afficher une personne depuis l'id
      */
-    #[Route('/api/personnes/{id}', name: 'detailPersonneId', methods: ['GET'])]
+    #[Route('/api/personnes/id/{id}', name: 'detailPersonneId', methods: ['GET'])]
     public function readPersonneById(Personne $personne, SerializerInterface $serializer): JsonResponse
     {
         $jsonPersonne = $serializer->serialize($personne, 'json');
@@ -48,10 +49,12 @@ class HomeController extends AbstractController
     /**
      * Afficher une personne depuis le prenom
      */
-    #[Route('/api/personnes/{prenom}', name: 'detailPersonnePrenom', methods: ['GET'])]
-    public function readPersonneByPrenom($prenom, PersonneRepository $personneRepository, SerializerInterface $serializer): JsonResponse
+    #[Route('/api/personnes/prenom/{prenom}', name: 'detailPersonnePrenom', methods: ['GET'])]
+    public function readPersonneByPrenom($prenom, PersonneRepository $personneRepository, SerializerInterface $serializer, EntityManagerInterface $em): JsonResponse
     {
-        $listPersonnes = $personneRepository->findByExampleField($prenom);
+        $query = $em->createQuery("SELECT p.id, p.prenom, p.nom FROM App:Personne AS p WHERE p.prenom LIKE :val OR p.nom LIKE :val");
+        $query->setParameter('val', $prenom . '%');
+        $listPersonnes = $query->getResult();
         $jsonListPersonnes = $serializer->serialize($listPersonnes, 'json');
 
         return new JsonResponse($jsonListPersonnes, Response::HTTP_OK, [], true);

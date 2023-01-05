@@ -4,16 +4,21 @@ const result = document.querySelector("#result");
 const liste = document.querySelector("#liste");
 const champ = document.querySelector("#champ");
 const liens = document.getElementsByTagName("a");
+let first = "";
 
-console.log('coucou');
+champ.addEventListener("keyup", appuie);
 
-champ.addEventListener("keyup", () => {
-    
+function appuie() {
     if (champ.value.length >= 1) {
-        console.log('coucou');
-        // recupererPersonnes(champ.value);
+        result.style.display = 'flex';
+        first = champ.value[0].toUpperCase();
+        recupererPersonnes(first);
+    } else {
+        result.style.display = 'none';
+        first = "";
+        champ.addEventListener("keyup", appuie);
     }
-});
+}
 
 function recupererPersonnes(prenom) {
     let requete = new XMLHttpRequest();
@@ -28,15 +33,13 @@ function recupererPersonnes(prenom) {
                 for (let i = 0; i < reponse.length; i++) {
                     let el = document.createElement("li");
                     el.innerHTML =
-                        '<a href="http://127.0.0.1:8000/api/personne/id/' +
+                        '<p style="cursor: pointer;" onclick="getPersonne(' +
                         reponse[i].id +
-                        '" style="text-decoration: none; color: #000;" onclick="getPersonne(' +
-                        reponse[i].id +
-                        ')" disabled>' +
+                        ')">' +
                         reponse[i].prenom +
                         " " +
                         reponse[i].nom +
-                        "</a>";
+                        "</p>";
                     liste.appendChild(el);
                 }
                 result.style.border = "1px solid #ccc";
@@ -53,7 +56,7 @@ function recupererPersonnes(prenom) {
 function getPersonne(id) {
     result.style.display = "none";
     champ.value = "";
-
+    console.log(id);
     let requete = new XMLHttpRequest();
     requete.open("GET", "http://127.0.0.1:8000/api/personnes/id/" + id);
     requete.responseType = "json";

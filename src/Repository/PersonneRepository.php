@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Personne;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
@@ -46,19 +47,11 @@ class PersonneRepository extends ServiceEntityRepository
     */
    public function findByExampleField($value): array
    {
-        // $rsm = new ResultSetMapping();
-        // $query = $this->entityManager->createNativeQuery('SELECT prenom, nom FROM personne WHERE prenom LIKE ?%', $rsm);
-        // $query->setParameter(1, $value);
-
-        // return $query->getResult();
-
-        $qb = $this->createQueryBuilder('p')
-                    ->andWhere(expr()->like('prenom', ':val'))
-                    ->setParameter(':val', $value . '%')
-                    ->getQuery()
-                    ->getResult();
-
-        return $qb;
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->createQuery("SELECT prenom, nom FROM App:Personne WHERE prenom LIKE :val OR nom LIKE :val");
+        $em->setParameter('val', $value . '%');
+        
+        return $em->getResult();
    }
 
 //    public function findOneBySomeField($value): ?Personne
