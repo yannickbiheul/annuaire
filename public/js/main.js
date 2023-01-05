@@ -15,6 +15,7 @@ champ.addEventListener("keyup", () => {
     }
 });
 
+// Requête AJAX qui récupère les personnes
 function recupererPersonnes(prenom) {
     let requete = new XMLHttpRequest();
     requete.open("GET", urlPrenom + prenom);
@@ -50,6 +51,7 @@ function recupererPersonnes(prenom) {
     };
 }
 
+// Requête AJAX qui récupère les personnes recherchées
 function getPersonne(id) {
     result.style.display = "none";
     champ.value = "";
