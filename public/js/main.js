@@ -1,15 +1,18 @@
+// Récupération des éléments
 const url = "http://127.0.0.1:8000/api/personnes";
 const result = document.querySelector("#result");
 const liste = document.querySelector("#liste");
 const champ = document.querySelector("#champ");
 const liens = document.getElementsByTagName("a");
 
+// Ajout d'un écouteur d'événement sur l'input
 champ.addEventListener("keyup", () => {
     if (champ.value.length >= 1) {
         recupererPersonnes(champ.value);
     }
 });
 
+// Requête AJAX qui récupère les personnes
 function recupererPersonnes(prenom) {
     let requete = new XMLHttpRequest();
     requete.open("GET", "http://127.0.0.1:8000/api/personnes/" + prenom);
@@ -45,6 +48,7 @@ function recupererPersonnes(prenom) {
     };
 }
 
+// Requête AJAX qui récupère les personnes recherchées
 function getPersonne(id) {
     result.style.display = "none";
     champ.value = "";
