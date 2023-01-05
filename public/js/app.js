@@ -1,25 +1,34 @@
+// Récupération des éléments
 const urlPrenom = "http://127.0.0.1:8000/api/personnes/prenom/";
 const urlId = "http://127.0.0.1:8000/api/personnes/id/";
 const result = document.querySelector("#result");
 const liste = document.querySelector("#liste");
 const champ = document.querySelector("#champ");
 const liens = document.getElementsByTagName("a");
-let first = "";
+let value = "";
 
+// Ajout d'un écouteur d'événement sur l'input
 champ.addEventListener("keyup", appuie);
 
 function appuie() {
-    if (champ.value.length >= 1) {
-        result.style.display = 'flex';
-        first = champ.value[0].toUpperCase();
-        recupererPersonnes(first);
+    champ.removeEventListener("keyup", appuie);
+    if (champ.value.length >= 3) {
+        // Transformation de la 1ère lettre en majuscule
+        value = champ.value[0].toUpperCase() + champ.value.slice(1);
+        setTimeout(() => {
+            recupererPersonnes(value);
+        }, "1000");
+        setInterval(() => {
+            champ.addEventListener("keyup", appuie);
+        }, 1100);
     } else {
         result.style.display = 'none';
-        first = "";
+        liste.innerHTML = "";
         champ.addEventListener("keyup", appuie);
     }
 }
 
+// Récupération des personnes correspondant à la valeur de l'input
 function recupererPersonnes(prenom) {
     let requete = new XMLHttpRequest();
     requete.open("GET", urlPrenom + prenom);
@@ -30,22 +39,27 @@ function recupererPersonnes(prenom) {
         if (requete.readyState === XMLHttpRequest.DONE) {
             if (requete.status === 200) {
                 let reponse = requete.response;
-                for (let i = 0; i < reponse.length; i++) {
-                    let el = document.createElement("li");
-                    el.innerHTML =
-                        '<p style="cursor: pointer;" onclick="getPersonne(' +
-                        reponse[i].id +
-                        ')">' +
-                        reponse[i].prenom +
-                        " " +
-                        reponse[i].nom +
-                        "</p>";
-                    liste.appendChild(el);
+                if(reponse.length > 0) {
+                    // Affichage de la div result
+                    result.style.display = 'flex';
+                    for (let i = 0; i < reponse.length; i++) {
+                        let el = document.createElement("li");
+                        el.innerHTML =
+                            '<p style="cursor: pointer;" onclick="getPersonne(' +
+                            reponse[i].id +
+                            ')">' +
+                            reponse[i].prenom +
+                            " " +
+                            reponse[i].nom +
+                            "</p>";
+                        liste.appendChild(el);
+                    }
+                    result.style.border = "1px solid #ccc";
+                    result.style.width = "300px";
+                    result.style.paddingLeft = "5px";
+                    result.style.overflowY = "scroll";
                 }
-                result.style.border = "1px solid #ccc";
-                result.style.width = "300px";
-                result.style.paddingLeft = "5px";
-                result.style.overflowY = "scroll";
+                
             } else {
                 alert("ERREUR !!!");
             }
@@ -53,6 +67,7 @@ function recupererPersonnes(prenom) {
     };
 }
 
+// Récupération de la personne choisie dans la liste
 function getPersonne(id) {
     result.style.display = "none";
     champ.value = "";
