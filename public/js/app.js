@@ -5,27 +5,27 @@ const result = document.querySelector("#result");
 const liste = document.querySelector("#liste");
 const champ = document.querySelector("#champ");
 const liens = document.getElementsByTagName("a");
-let value = "";
 
 // Ajout d'un écouteur d'événement sur l'input
-champ.addEventListener("keyup", appuie);
+champ.addEventListener("focus", appuie);
 
 function appuie() {
-    champ.removeEventListener("keyup", appuie);
-    if (champ.value.length >= 3) {
+    
+    setTimeout(() => {
         // Transformation de la 1ère lettre en majuscule
-        value = champ.value[0].toUpperCase() + champ.value.slice(1);
-        setTimeout(() => {
+        let value = champ.value[0].toUpperCase() + champ.value.slice(1);
+        if (champ.value.length >= 1) {
+            champ.removeEventListener("focus", appuie);
+            console.log(value);
             recupererPersonnes(value);
-        }, "1000");
-        setInterval(() => {
-            champ.addEventListener("keyup", appuie);
-        }, 1100);
-    } else {
-        result.style.display = 'none';
-        liste.innerHTML = "";
-        champ.addEventListener("keyup", appuie);
-    }
+            champ.removeEventListener("focus", appuie);
+            champ.addEventListener("focus", appuie);
+        } else {
+            result.style.display = 'none';
+            liste.innerHTML = "";
+            champ.addEventListener("focus", appuie);
+        }
+    }, 3000)
 }
 
 // Récupération des personnes correspondant à la valeur de l'input
