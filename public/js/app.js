@@ -5,33 +5,30 @@ const result = document.querySelector("#result");
 const liste = document.querySelector("#liste");
 const champ = document.querySelector("#champ");
 const liens = document.getElementsByTagName("a");
+let value = "";
 
-// Ajout d'un écouteur d'événement sur l'input
-champ.addEventListener("focus", appuie);
-
-function appuie() {
-    
-    setTimeout(() => {
-        // Transformation de la 1ère lettre en majuscule
-        let value = champ.value[0].toUpperCase() + champ.value.slice(1);
-        if (champ.value.length >= 1) {
-            champ.removeEventListener("focus", appuie);
-            console.log(value);
+let timeout;
+champ.addEventListener("input", () => {
+    clearTimeout(timeout);
+    value = champ.value;
+    timeout = setTimeout(() => {
+        console.log(value);
+        if (value.length >= 1) {
             recupererPersonnes(value);
-            champ.removeEventListener("focus", appuie);
-            champ.addEventListener("focus", appuie);
         } else {
             result.style.display = 'none';
             liste.innerHTML = "";
-            champ.addEventListener("focus", appuie);
         }
-    }, 3000)
-}
+    }, 500);
+})
 
 // Récupération des personnes correspondant à la valeur de l'input
 function recupererPersonnes(prenom) {
+    if (prenom.includes(" ")) {
+        console.log(encodeURI(prenom));
+    }
     let requete = new XMLHttpRequest();
-    requete.open("GET", urlPrenom + prenom);
+    requete.open("GET", urlPrenom + encodeURI(prenom));
     requete.responseType = "json";
     requete.send();
 
@@ -48,9 +45,9 @@ function recupererPersonnes(prenom) {
                             '<p style="cursor: pointer;" onclick="getPersonne(' +
                             reponse[i].id +
                             ')">' +
-                            reponse[i].prenom +
+                            reponse[i].prenom[0].toUpperCase() + reponse[i].prenom.slice(1) +
                             " " +
-                            reponse[i].nom +
+                            reponse[i].nom.toUpperCase() +
                             "</p>";
                         liste.appendChild(el);
                     }

@@ -52,8 +52,20 @@ class HomeController extends AbstractController
     #[Route('/api/personnes/prenom/{prenom}', name: 'detailPersonnePrenom', methods: ['GET'])]
     public function readPersonneByPrenom($prenom, PersonneRepository $personneRepository, SerializerInterface $serializer, EntityManagerInterface $em): JsonResponse
     {
-        $query = $em->createQuery("SELECT p.id, p.prenom, p.nom FROM App:Personne AS p WHERE p.prenom LIKE :val OR p.nom LIKE :val");
-        $query->setParameter('val', $prenom . '%');
+        if (str_contains($prenom, ' ')) {
+            $tableauPrenom = explode(' ', $prenom);
+            $query = $em->createQuery("SELECT p.id, p.prenom, p.nom 
+                                        FROM App:Personne AS p 
+                                        WHERE p.prenom LIKE :val1 AND p.nom LIKE :val2
+                                        OR p.nom LIKE :val1 AND p.prenom LIKE :val2
+                                        OR p.prenom LIKE :val1 OR p.nom LIKE :val2");
+            $query->setParameter('val1', '%' . $tableauPrenom[0] . '%');
+            $query->setParameter('val2', '%' . $tableauPrenom[1] . '%');
+        } else {
+            $query = $em->createQuery("SELECT p.id, p.prenom, p.nom FROM App:Personne AS p WHERE p.prenom LIKE :val OR p.nom LIKE :val");
+            $query->setParameter('val', '%' . $prenom . '%');
+        }
+        
         $listPersonnes = $query->getResult();
         $jsonListPersonnes = $serializer->serialize($listPersonnes, 'json');
 

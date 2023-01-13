@@ -15,8 +15,8 @@ class AppFixtures extends Fixture
 
         for ($i=0; $i < 50; $i++) { 
             $personne = new Personne();
-            $personne->setPrenom($faker->firstName());
-            $personne->setNom($faker->lastName());
+            $personne->setPrenom(strtolower($faker->firstName()));
+            $personne->setNom(strtolower($faker->lastName()));
             $personne->setTel($faker->phoneNumber());
 
             $manager->persist($personne);
