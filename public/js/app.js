@@ -42,13 +42,13 @@ function recupererPersonnes(prenom) {
                     for (let i = 0; i < reponse.length; i++) {
                         let el = document.createElement("li");
                         el.innerHTML =
-                            '<p style="cursor: pointer;" onclick="getPersonne(' +
-                            reponse[i].id +
-                            ')">' +
-                            reponse[i].prenom[0].toUpperCase() + reponse[i].prenom.slice(1) +
-                            " " +
-                            reponse[i].nom.toUpperCase() +
-                            "</p>";
+                        '<p style="cursor: pointer;" onclick="getPersonne(' +
+                        reponse[i].id +
+                        ')">' +
+                        reponse[i].prenom[0].toUpperCase() + reponse[i].prenom.slice(1) +
+                        " " +
+                        reponse[i].nom.toUpperCase() +
+                        "</p>";
                         liste.appendChild(el);
                     }
                     result.style.border = "1px solid #ccc";
